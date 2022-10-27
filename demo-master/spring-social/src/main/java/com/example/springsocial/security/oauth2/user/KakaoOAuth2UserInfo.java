@@ -1,5 +1,6 @@
 package com.example.springsocial.security.oauth2.user;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
@@ -17,21 +18,25 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
     public String getName() {
         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
         if (properties == null)     return null;
-        return (String) properties.get("nickname");
+
+        HashMap hashMap = (HashMap)attributes.get("kakao_account");
+        HashMap profileHashMap =(HashMap) hashMap.get("profile");
+
+        return (String) profileHashMap.get("nickname");
     }
 
     @Override
     public String getEmail() {
         // 수정한부분
-        if(attributes.get("account_email") == null)
-            System.out.println("\n\n>>> email is null <<<\n");
-        return (String) attributes.get("account_email");
-    }
-
-    @Override
-    public String getImageUrl() {
-        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
-        if (properties == null)     return null;
-        return (String) properties.get("thumbnail_image");
+        for(Object key: attributes.keySet()){
+            System.out.println(key);
+        }
+        System.out.println("=====kakao_account=====");
+        HashMap hashMap = (HashMap) attributes.get("kakao_account");
+        System.out.println(hashMap);
+//        for(Object key: lhs.keySet()){
+//            System.out.println(key);
+//        }
+        return (String) hashMap.get("email");
     }
 }
